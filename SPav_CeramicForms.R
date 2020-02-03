@@ -90,3 +90,19 @@ SPavtable$FormCat <- paste(SPavtable$CeramicVesselCategory, SPavtable$CeramicFor
 #Summarize data by new field of Category and Form
 justtable<-aggregate(SPavtable$Quantity, by=list(SPavtable$FormCat), FUN=sum)
 colnames(justform)<- c("Form","Count")
+
+#Now let's see the specific Forms
+SPavForms <-dbGetQuery(DRCcon,'
+SELECT
+"public"."tblCeramicForm"."CeramicForm",
+Sum("public"."tblCeramic"."Quantity")
+FROM
+"public"."tblCeramic"
+INNER JOIN "public"."tblCeramicForm" ON "public"."tblCeramic"."CeramicFormID" = "public"."tblCeramicForm"."CeramicFormID"
+WHERE
+"public"."tblCeramic"."ArtifactID" LIKE \'67%\'
+GROUP BY
+"public"."tblCeramicForm"."CeramicForm"
+ORDER BY
+"public"."tblCeramicForm"."CeramicForm" ASC
+')
