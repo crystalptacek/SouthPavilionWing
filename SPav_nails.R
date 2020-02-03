@@ -88,3 +88,24 @@ SPavWireNails <-dbGetQuery(DRCcon,'
       ')
 
 sum(SPavWireNails$Quantity)
+
+#Now let's put everything into one table
+SPavAllNails <-dbGetQuery(DRCcon,'
+SELECT
+"public"."tblGenArtifactForm"."GenArtifactForm",
+Sum("public"."tblGenArtifact"."Quantity"),
+"public"."tblGenArtifactManuTech"."GenArtifactManuTech"
+FROM
+"public"."tblGenArtifact"
+INNER JOIN "public"."tblGenArtifactForm" ON "public"."tblGenArtifact"."GenArtifactFormID" = "public"."tblGenArtifactForm"."GenArtifactFormID"
+INNER JOIN "public"."tblGenArtifactMaterial" ON "public"."tblGenArtifactMaterial"."GenerateContextArtifactID" = "public"."tblGenArtifact"."GenerateContextArtifactID"
+INNER JOIN "public"."tblGenArtifactManuTech" ON "public"."tblGenArtifactMaterial"."GenArtifactManuTechID" = "public"."tblGenArtifactManuTech"."GenArtifactManuTechID"
+WHERE
+"public"."tblGenArtifact"."ArtifactID" LIKE \'67%\' AND
+"public"."tblGenArtifactForm"."GenArtifactForm" = \'Nail\'
+GROUP BY
+"public"."tblGenArtifactForm"."GenArtifactForm",
+"public"."tblGenArtifactManuTech"."GenArtifactManuTech"
+ORDER BY
+"public"."tblGenArtifactForm"."GenArtifactForm" ASC
+')
